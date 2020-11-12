@@ -4,7 +4,7 @@ window.onload = (event) => {
    const form = document.querySelector('#launchForm');
 
    form.addEventListener('submit', function(event) {
-
+      event.preventDefault();  
     let pilotName = document.querySelector('input[name=pilotName]').value.trim();
     let copilotName = document.querySelector('input[name=copilotName]').value.trim();
     let fuelLevel = Number(document.querySelector('input[name=fuelLevel]').value);
@@ -27,7 +27,7 @@ window.onload = (event) => {
      };
 
    if (!isValid()) {
-   event.preventDefault();
+   
    event.stopPropagation();
    return false;
    }
