@@ -1,62 +1,78 @@
 // input validation
-window.addEventListener('load', function() {
-//window.onload = (event) => {
+//window.addEventListener('load', function() {
+window.onload = (event) => {
    const form = document.querySelector('#launchForm');
 
    form.addEventListener('submit', function(event) {
-     
-    //let inputs = [];  
-    let pilotName = document.querySelector('input[name=pilotName]').value;
-    let copilotName = document.querySelector('input[name=copilotName]').value;
+
+    let pilotName = document.querySelector('input[name=pilotName]').value.trim();
+    let copilotName = document.querySelector('input[name=copilotName]').value.trim();
     let fuelLevel = Number(document.querySelector('input[name=fuelLevel]').value);
     let cargoMass = Number(document.querySelector('input[name=cargoMass]').value);
-    //let formInput = document.querySelectorAll('input');
+   // let names = [];
+   // let numInput = [];
+   // names.push(pilotName, copilotName);
+  
+   function isValid() {
+      if (pilotName ==='' || copilotName ==='' || fuelLevel==='' || cargoMass==='') {
+       alert('All fields are required!');
+       return false;
+      } 
+      if (isNaN(fuelLevel) || isNaN(cargoMass) || typeof pilotName !== 'string' ||  typeof copilotName !== 'string') {
+       alert('Please enter valid input!');
+       return false; 
+      } else {
+        return true;
+       }
+     };
 
-    if (pilotName ==='' || copilotName ==='' || isNaN(fuelLevel) || isNaN(cargoMass)) {
-      alert('All fields are required!');
-      event.preventDefault();
-
-    } else {
+   if (!isValid()) {
+   event.preventDefault();
+   event.stopPropagation();
+   return false;
+   }
 
     // update requirements
-    let faultyItems = document.getElementById('faultyItems');
-    let fuelStatus = document.getElementById('fuelStatus');
-    let pilotStatus = document.getElementById('pilotStatus');
-    let copilotStatus = document.getElementById('copilotStatus');
-    let launchStatus = document.getElementById('launchStatus');
-    let cargoStatus = document.getElementById('cargoStatus');
+   let faultyItems = document.getElementById('faultyItems').innerText;
+   let fuelStatus = document.getElementById('fuelStatus').innerHTML;
+   let pilotStatus = document.getElementById('pilotStatus').innerHTML;
+   let copilotStatus = document.getElementById('copilotStatus').innerHTML;
+   let launchStatus = document.getElementById('launchStatus');
+   let cargoStatus = document.getElementById('cargoStatus').innerHTML;
 
-    pilotStatus.innerHTML = `${pilotName} is ready.`
-    copilotStatus.innerHTML = `${copilotName} is ready.`
-   
-   let launchReady = () => {
+   let getReady = function()  {
       let ready;
       if (fuelLevel < 10000) {
-         !ready;
-         fuelStatus.innerHTML = `Fuel level: ${fuelLevel} too low for travel.`;
+         ready = false;
+         fuelStatus = `Fuel level: ${fuelLevel} too low for travel.`;
       }
 
       if (cargoMass > 10000) {
          ready = false;
-         cargoStatus.innerHTML = `Cargo mass: ${fuelLevel} too high for take off.`;
+         cargoStatus = `Cargo mass: ${cargoMass} too high for take off.`;
       }
 
       return ready;
-   }
+   };
 
-   if (!launchReady) {
+   if (!getReady)  {
       faultyItems.style.visibility = 'visible';
       launchStatus.innerHTML = 'Shuttle not ready for launch.';
       launchStatus.style.color = 'red';
-   }
-      else {
+   
+   } else if (getReady === true) {
+      
       launchStatus.innerHTML = 'Shuttle is ready for launch.';
       launchStatus.style.color = 'green';
-   }
-    
-}
+
+   } else {
+
+      pilotStatus = `${pilotName} is ready.`;
+      copilotStatus = `${copilotName} is ready.`;
+    }
+   
    });
-})
+
 // fetch planetary data
 fetch('https://handlers.education.launchcode.org/static/planets.json').then(function(response) {
 
@@ -76,7 +92,7 @@ fetch('https://handlers.education.launchcode.org/static/planets.json').then(func
 
    });
 });
-
+}
 
 /* This block of code shows how to format the HTML once you fetch some planetary JSON!
 <h2>Mission Destination</h2>
