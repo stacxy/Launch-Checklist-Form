@@ -13,63 +13,55 @@ window.onload = (event) => {
    // let numInput = [];
    // names.push(pilotName, copilotName);
   
-   function isValid() {
+   
       if (pilotName ==='' || copilotName ==='' || fuelLevel==='' || cargoMass==='') {
        alert('All fields are required!');
-       return false;
+       event.preventDefault();
       } 
       if (isNaN(fuelLevel) || isNaN(cargoMass) || typeof pilotName !== 'string' ||  typeof copilotName !== 'string') {
        alert('Please enter valid input!');
-       return false; 
-      } else {
-        return true;
-       }
-     };
-
-   if (!isValid()) {
-   
-   event.stopPropagation();
-   return false;
-   }
+       event.preventDefault();
+      }
 
     // update requirements
-   let faultyItems = document.getElementById('faultyItems').innerText;
-   let fuelStatus = document.getElementById('fuelStatus').innerHTML;
-   let pilotStatus = document.getElementById('pilotStatus').innerHTML;
-   let copilotStatus = document.getElementById('copilotStatus').innerHTML;
+   let faultyItems = document.getElementById('faultyItems');
+   let fuelStatus = document.getElementById('fuelStatus');
+   let pilotStatus = document.getElementById('pilotStatus');
+   let copilotStatus = document.getElementById('copilotStatus');
    let launchStatus = document.getElementById('launchStatus');
-   let cargoStatus = document.getElementById('cargoStatus').innerHTML;
-
-   let getReady = function()  {
+   let cargoStatus = document.getElementById('cargoStatus');
+   pilotStatus.innerHTML = `${pilotName} is ready.`;
+   copilotStatus.innerHTML = `${copilotName} is ready.`;
+  
       let ready;
       if (fuelLevel < 10000) {
          ready = false;
-         fuelStatus = `Fuel level: ${fuelLevel} too low for travel.`;
+         fuelStatus.innerHTML = `Fuel level: ${fuelLevel} too low for travel.`;
+      } else {
+         fuelStatus.innerHTML = `Fuel level high enough for launch`;
+         ready = true;
       }
 
       if (cargoMass > 10000) {
          ready = false;
-         cargoStatus = `Cargo mass: ${cargoMass} too high for take off.`;
+         cargoStatus.innerHTML = `Cargo mass: ${cargoMass} too high for take off.`;
+      } else {
+         cargoStatus.innerHTML = `Cargo mass low enough for launch`;
+         ready = true;
       }
 
-      return ready;
-   };
 
-   if (!getReady)  {
+   if (!ready)  {
       faultyItems.style.visibility = 'visible';
       launchStatus.innerHTML = 'Shuttle not ready for launch.';
       launchStatus.style.color = 'red';
    
-   } else if (getReady === true) {
-      
+   } else  {
+      faultyItems.style.visibility = 'visible';
       launchStatus.innerHTML = 'Shuttle is ready for launch.';
       launchStatus.style.color = 'green';
 
-   } else {
-
-      pilotStatus = `${pilotName} is ready.`;
-      copilotStatus = `${copilotName} is ready.`;
-    }
+   } 
    
    });
 
